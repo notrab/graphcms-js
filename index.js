@@ -13,12 +13,16 @@ class GraphCMS {
     });
     this._model = null;
     this._where = null;
+    this._first = null;
+    this._skip = null;
     this._select = null;
   }
 
   clear() {
     this._model = null;
     this._where = null;
+    this._first = null;
+    this._skip = null;
     this._select = null;
   }
 
@@ -32,23 +36,39 @@ class GraphCMS {
     return this;
   }
 
+  first(first) {
+    this._first = first;
+    return this;
+  }
+
+  skip(skip) {
+    this._skip = skip;
+    return this;
+  }
+
   select(select) {
     this._select = select;
     return this;
   }
 
   async exec() {
-    const { _model, _where, _select } = this;
+    const { _model, _where, _first, _skip, _select } = this;
 
     const request = await this.api.request(
       jsonToGraphQLQuery({
         query: {
           [_model]: {
-            ...(_where && {
-              __args: {
+            __args: {
+              ...(_where && {
                 where: _where,
-              },
-            }),
+              }),
+              ...(_first && {
+                first: _first,
+              }),
+              ...(_skip && {
+                skip: _skip,
+              }),
+            },
             ..._select,
           },
         },
