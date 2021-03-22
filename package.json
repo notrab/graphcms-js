@@ -1,0 +1,20 @@
+{
+  "name": "graphcms-request",
+  "version": "0.0.0-semantic-release",
+  "description": "",
+  "main": "index.js",
+  "repository": "notrab/graphcms-request",
+  "author": "Jamie Barton <jamie@notrab.dev> (https://notrab.dev)",
+  "license": "MIT",
+  "keywords": [
+    "graphql",
+    "graphcms",
+    "graphql-request",
+    "content api"
+  ],
+  "dependencies": {
+    "graphql": "15.3.0",
+    "graphql-request": "3.2.0",
+    "json-to-graphql-query": "2.0.0"
+  }
+}
