@@ -1,9 +1,9 @@
 {
-  "name": "graphcms-request",
+  "name": "graphcms-js",
   "version": "0.0.0-semantic-release",
   "description": "",
   "main": "index.js",
-  "repository": "notrab/graphcms-request",
+  "repository": "notrab/graphcms-js",
   "author": "Jamie Barton <jamie@notrab.dev> (https://notrab.dev)",
   "license": "MIT",
   "keywords": [
