@@ -1,7 +1,21 @@
-const { jsonToGraphQLQuery } = require("json-to-graphql-query");
+const { jsonToGraphQLQuery, EnumType } = require("json-to-graphql-query");
 const { GraphQLClient } = require("graphql-request");
 
+class GraphCMSParams {
+  model = null;
+  select = null;
+  where = null;
+  orderBy = null;
+  skip = null;
+  after = null;
+  before = null;
+  first = null;
+  last = null;
+}
+
 class GraphCMS {
+  params;
+
   constructor(endpoint, options) {
     this.config = { endpoint, ...options };
     this.api = new GraphQLClient(endpoint, {
@@ -11,64 +25,67 @@ class GraphCMS {
         },
       }),
     });
-    this._model = null;
-    this._where = null;
-    this._first = null;
-    this._skip = null;
-    this._select = null;
+
+    this.params = new GraphCMSParams();
   }
 
   clear() {
-    this._model = null;
-    this._where = null;
-    this._first = null;
-    this._skip = null;
-    this._select = null;
+    this.params = new GraphCMSParams();
   }
 
   model(model) {
-    this._model = model;
+    this.params.model = model;
     return this;
   }
 
   where(where) {
-    this._where = where;
+    this.params.where = where;
     return this;
   }
 
-  first(first) {
-    this._first = first;
+  orderBy(orderBy) {
+    this.params.orderBy = new EnumType(orderBy);
     return this;
   }
 
   skip(skip) {
-    this._skip = skip;
+    this.params.skip = skip;
+    return this;
+  }
+
+  after(after) {
+    this.params.after = after;
+    return this;
+  }
+
+  before(before) {
+    this.params.before = before;
+    return this;
+  }
+
+  first(first) {
+    this.params.first = first;
+    return this;
+  }
+
+  last(last) {
+    this.params.last = last;
     return this;
   }
 
   select(select) {
-    this._select = select;
+    this.params.select = select;
     return this;
   }
 
   async exec() {
-    const { _model, _where, _first, _skip, _select } = this;
+    const { model: _model, select: _select, ...__args } = this.params;
 
     const request = await this.api.request(
       jsonToGraphQLQuery({
         query: {
           [_model]: {
-            __args: {
-              ...(_where && {
-                where: _where,
-              }),
-              ...(_first && {
-                first: _first,
-              }),
-              ...(_skip && {
-                skip: _skip,
-              }),
-            },
+            __args,
             ..._select,
           },
         },
@@ -76,6 +93,7 @@ class GraphCMS {
     );
 
     this.clear();
+
     return request[_model];
   }
 }
